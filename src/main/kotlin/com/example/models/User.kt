@@ -65,10 +65,6 @@ suspend fun validateFingerprintData(requestId: String, visitorId: String?): Vali
         }
         val stringBody: String = response.body()
 
-        println(stringBody)
-
-        println("---- Content ----")
-
         client.close()
 
         val respJson = Json {
@@ -82,13 +78,9 @@ suspend fun validateFingerprintData(requestId: String, visitorId: String?): Vali
 
         val timeNow = Date().time
 
-        println("Time now ${timeNow}")
-
         if (timeNow - identificationTimestamp > maxRequestLifespan) {
             return ValidatationResult(false, "Fingerprint request expired.")
         }
-
-        println("Visitor ID ${visitorId} and server visitor ID ${serverVisitorId}")
 
         if (!serverVisitorId.equals(visitorId)) {
             return ValidatationResult(false, "Fingerprint forgery detected.")
